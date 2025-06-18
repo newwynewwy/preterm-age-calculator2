@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Preterm Age Calculator by OtterDoctor</title>
   <style>
     body {
@@ -40,19 +40,19 @@
   <h2>Preterm Age Calculator by OtterDoctor</h2>
 
   <label>Infant's Date of Birth:
-    <input type="date" id="birthDate" required>
+    <input type="date" id="birthDate" required />
   </label>
 
   <label>GA at Birth (Weeks):
-    <input type="number" id="gaWeeks" min="1" max="39" required placeholder="e.g. 29">
+    <input type="number" id="gaWeeks" min="1" max="39" required placeholder="e.g. 29" />
   </label>
 
   <label>GA at Birth (Days):
-    <input type="number" id="gaDays" min="0" max="6" required placeholder="e.g. 3">
+    <input type="number" id="gaDays" min="0" max="6" required placeholder="e.g. 3" />
   </label>
 
   <label>Current Date:
-    <input type="date" id="currentDate" required>
+    <input type="date" id="currentDate" required />
   </label>
 
   <button onclick="Calculate()">Calculate</button>
@@ -66,9 +66,20 @@
       const gaDays = parseInt(document.getElementById("gaDays").value);
       const currentDate = new Date(document.getElementById("currentDate").value);
 
-      if (!birthDate || !currentDate || isNaN(birthDate) || isNaN(currentDate) ||
-          isNaN(gaWeeks) || isNaN(gaDays) || gaWeeks < 1 || gaWeeks > 39 || gaDays < 0 || gaDays > 6) {
-        document.getElementById("result").textContent = "Please fill all fields correctly.";
+      if (
+        !birthDate ||
+        !currentDate ||
+        isNaN(birthDate) ||
+        isNaN(currentDate) ||
+        isNaN(gaWeeks) ||
+        isNaN(gaDays) ||
+        gaWeeks < 1 ||
+        gaWeeks > 39 ||
+        gaDays < 0 ||
+        gaDays > 6
+      ) {
+        document.getElementById("result").textContent =
+          "Please fill all fields correctly.";
         return;
       }
 
@@ -90,36 +101,31 @@
 
       // PCA calculation
       const ageInDays = Math.floor((currentDate - birthDate) / (1000 * 60 * 60 * 24));
-      const totalGADays = (gaWeeks * 7) + gaDays + ageInDays;
+      const totalGADays = gaWeeks * 7 + gaDays + ageInDays;
       const pcaWeeks = Math.floor(totalGADays / 7);
       const pcaDays = totalGADays % 7;
 
       let pcaText = `PCA (Post-conceptional Age): ${pcaWeeks} weeks ${pcaDays} days`;
       if (pcaWeeks < 37 || pcaWeeks > 40) {
-        pcaText = `<span class="warning">${pcaText}${pcaWeeks > 40 ? ' - Consider using Corrected Age as primary reference' : ''}</span>`;
+        pcaText = `<span class="warning">${pcaText}${
+          pcaWeeks > 40 ? " - Consider using Corrected Age as primary reference" : ""
+        }</span>`;
       }
 
-      // Corrected age calculation
-      const correctedBirthDate = new Date(birthDate);
-      correctedBirthDate.setDate(correctedBirthDate.getDate() + ((gaWeeks * 7 + gaDays) - 280));
+      // Corrected age calculation (แสดงเฉพาะ Corrected Age - 280 days พร้อมสี)
+      const chronoAgeDays = ageInDays;
+      const gaBirthDays = gaWeeks * 7 + gaDays;
 
-      let cYears = currentDate.getFullYear() - correctedBirthDate.getFullYear();
-      let cMonths = currentDate.getMonth() - correctedBirthDate.getMonth();
-      let cDays = currentDate.getDate() - correctedBirthDate.getDate();
+      const correctedAgeDays = gaBirthDays + chronoAgeDays;
+      const correctedMinus280 = correctedAgeDays - 280;
+      const absDiff = Math.abs(correctedMinus280);
+      const diffWeeks = Math.floor(absDiff / 7);
+      const diffDays = absDiff % 7;
 
-      if (cDays < 0) {
-        cMonths--;
-        cDays += new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
-      }
-      if (cMonths < 0) {
-        cYears--;
-        cMonths += 12;
-      }
+      const diffSign = correctedMinus280 >= 0 ? "" : "-";
+      const color = correctedMinus280 >= 0 ? "green" : "red";
 
-      const correctedText = `Corrected Age: ${cYears} years ${cMonths} months ${cDays} days`;
-
-      // Show result
-      document.getElementById("result").innerHTML = `${chronoText}<br>${pcaText}<br>${correctedText}`;
+      document.getElementById("result").innerHTML = `${chronoText}<br>${pcaText}<br><span style="color:${color}; font-weight:bold;">${diffSign}${diffWeeks} weeks ${diffDays} days</span>`;
     }
   </script>
 </body>
