@@ -112,20 +112,20 @@
         }</span>`;
       }
 
-      // Corrected age calculation (แสดงเฉพาะ Corrected Age - 280 days พร้อมสี)
-      const chronoAgeDays = ageInDays;
-      const gaBirthDays = gaWeeks * 7 + gaDays;
+      // Corrected Age = GA at birth + Chronological age
+      const correctedAgeDays = gaWeeks * 7 + gaDays + ageInDays;
+      const diffFrom280 = correctedAgeDays - 280;
 
-      const correctedAgeDays = gaBirthDays + chronoAgeDays;
-      const correctedMinus280 = correctedAgeDays - 280;
-      const absDiff = Math.abs(correctedMinus280);
+      const sign = diffFrom280 >= 0 ? "" : "-";
+      const absDiff = Math.abs(diffFrom280);
       const diffWeeks = Math.floor(absDiff / 7);
       const diffDays = absDiff % 7;
+      const color = diffFrom280 >= 0 ? "green" : "red";
 
-      const diffSign = correctedMinus280 >= 0 ? "" : "-";
-      const color = correctedMinus280 >= 0 ? "green" : "red";
+      const correctedText = `<span style="color:${color};">Corrected Age: ${sign}${diffWeeks} weeks ${diffDays} days</span>`;
 
-      document.getElementById("result").innerHTML = `${chronoText}<br>${pcaText}<br><span style="color:${color}; font-weight:bold;">${diffSign}${diffWeeks} weeks ${diffDays} days</span>`;
+      // Show result
+      document.getElementById("result").innerHTML = `${chronoText}<br>${pcaText}<br>${correctedText}`;
     }
   </script>
 </body>
