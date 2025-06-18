@@ -101,7 +101,7 @@
 
       // Corrected age calculation
       const correctedBirthDate = new Date(birthDate);
-      correctedBirthDate.setDate(correctedBirthDate.getDate() + (280 - (gaWeeks * 7 + gaDays)));
+      correctedBirthDate.setDate(correctedBirthDate.getDate() + ((gaWeeks * 7 + gaDays) - 280));
 
       let cYears = currentDate.getFullYear() - correctedBirthDate.getFullYear();
       let cMonths = currentDate.getMonth() - correctedBirthDate.getMonth();
