@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Preterm Age Calculator by Otter</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: auto;
+      padding: 1em;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+      text-align: left;
+    }
+    input {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.25em;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 0.5em 1em;
+      font-size: 1em;
+    }
+    #result {
+      margin-top: 1.5em;
+      font-weight: bold;
+      white-space: pre-line;
+    }
+    .warning {
+      color: red;
+    }
+    img.logo {
+      max-width: 120px;
+      margin-bottom: 1em;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Otter_in_water.jpg/320px-Otter_in_water.jpg" alt="Otter Logo" class="logo">
+  <h2>Preterm Age Calculator by Otter</h2>
+
+  <label>วันเกิดทารก:
+    <input type="date" id="birthDate">
+  </label>
+
+  <label>GA ตอนคลอด (สัปดาห์):
+    <input type="number" id="gaWeeks" placeholder="เช่น 29">
+  </label>
+
+  <label>GA ตอนคลอด (วัน):
+    <input type="number" id="gaDays" placeholder="เช่น 3">
+  </label>
+
+  <label>วันที่ปัจจุบัน:
+    <input type="date" id="currentDate">
+  </label>
+
+  <button onclick="calculatePCA()">คำนวณ</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculatePCA() {
+      const birthDate = new Date(document.getElementById("birthDate").value);
+      const gaWeeks = parseInt(document.getElementById("gaWeeks").value) || 0;
+      const gaDays = parseInt(document.getElementById("gaDays").value) || 0;
+      const currentDate = new Date(document.getElementById("currentDate").value);
+
+      if (!birthDate || !currentDate || isNaN(birthDate) || isNaN(currentDate)) {
+        document.getElementById("result").textContent = "กรุณากรอกวันให้ครบถ้วน";
+        return;
+      }
+
+      const ageInDays = Math.floor((currentDate - birthDate) / (1000 * 60 * 60 * 24));
+      const ageWeeks = Math.floor(ageInDays / 7);
+      const ageDays = ageInDays % 7;
+
+      const totalGADays = (gaWeeks * 7) + gaDays + ageInDays;
+      const pcaWeeks = Math.floor(totalGADays / 7);
+      const pcaDays = totalGADays % 7;
+
+      const correctedBirthDate = new Date(birthDate);
+      correctedBirthDate.setDate(correctedBirthDate.getDate() + (40 * 7 - (gaWeeks * 7 + gaDays)));
+
+      let correctedYears = currentDate.getFullYear() - correctedBirthDate.getFullYear();
+      let correctedMonths = currentDate.getMonth() - correctedBirthDate.getMonth();
+      let correctedDays = currentDate.getDate() - correctedBirthDate.getDate();
+
+      if (correctedDays < 0) {
+        correctedMonths--;
+        correctedDays += new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+      }
+      if (correctedMonths < 0) {
+        correctedYears--;
+        correctedMonths += 12;
+      }
+
+      const ageText = `อายุจริง (Chronological age): ${ageWeeks} สัปดาห์ ${ageDays} วัน`;
+      let pcaText = `PCA (Post-conceptional age): ${pcaWeeks} สัปดาห์ ${pcaDays} วัน`;
+      if (pcaWeeks < 37 || pcaWeeks > 40) {
+        pcaText = `<span class="warning">${pcaText}${pcaWeeks > 40 ? ' - ให้พิจารณา Corrected Age เป็นหลัก' : ''}</span>`;
+      }
+
+      const correctedText = `Corrected Age: ${correctedYears} ปี ${correctedMonths} เดือน ${correctedDays} วัน`;
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `${ageText}<br>${pcaText}<br>${correctedText}`;
+    }
+  </script>
+</body>
+</html>
