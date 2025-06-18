@@ -113,16 +113,17 @@
       }
 
       // Corrected Age = GA at birth + Chronological age
-      const correctedAgeDays = gaWeeks * 7 + gaDays + ageInDays;
-      const diffFrom280 = correctedAgeDays - 280;
+const correctedAgeDays = gaWeeks * 7 + gaDays + ageInDays;
+const diffFrom280 = correctedAgeDays - 280;
 
-      const sign = diffFrom280 >= 0 ? "" : "-";
-      const absDiff = Math.abs(diffFrom280);
-      const diffWeeks = Math.floor(absDiff / 7);
-      const diffDays = absDiff % 7;
-      const color = diffFrom280 >= 0 ? "green" : "red";
+const sign = diffFrom280 >= 0 ? "" : "-";
+const absDiff = Math.abs(diffFrom280);
+const diffWeeks = Math.floor(absDiff / 7);
+const diffDays = absDiff % 7;
+const color = diffFrom280 >= 0 ? "green" : "red";
 
-      const correctedText = `<span style="color:${color};">Corrected Age: ${sign}${diffWeeks} weeks ${diffDays} days</span>`;
+// ใส่ "Corrected Age:" พร้อมสีที่เหมาะสม
+const correctedText = `<span style="color:${color};">Corrected Age: ${sign}${diffWeeks} weeks ${diffDays} days</span>`;
 
       // Show result
       document.getElementById("result").innerHTML = `${chronoText}<br>${pcaText}<br>${correctedText}`;
